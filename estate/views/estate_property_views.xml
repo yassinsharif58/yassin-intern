@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The Action: Tells Odoo what model to open and how to view it -->
+    <record id="estate_property_action" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- The Menus: Creates the top app icon and the dropdown menus -->
+    <menuitem id="estate_menu_root" name="Real Estate"/>
+
+    <menuitem id="estate_menu_first_level" name="Advertisements" parent="estate_menu_root"/>
+
+    <menuitem id="estate_menu_action" name="Properties" parent="estate_menu_first_level" action="estate_property_action"/>
+</odoo>
