@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The Action -->
+    <record id="estate_property_type_action" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- The Settings Menus -->
+    <!-- This creates a 'Settings' menu right next to 'Advertisements' -->
+    <menuitem id="estate_menu_settings" name="Settings" parent="estate_menu_root"/>
+
+    <!-- This creates the clickable 'Property Types' link inside Settings -->
+    <menuitem id="estate_property_type_menu" name="Property Types" parent="estate_menu_settings" action="estate_property_type_action"/>
+</odoo>
