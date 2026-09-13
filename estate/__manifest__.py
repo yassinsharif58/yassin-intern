@@ -4,7 +4,9 @@
     'category': 'Real Estate',
     'summary': 'Manage real estate properties and advertisements',
     'depends': ['base'],
-    'data': [],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'installable': True,
     'license': 'LGPL-3',
 }
