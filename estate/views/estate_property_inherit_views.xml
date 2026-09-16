@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1. Extend Partner Form View to add Real Estate Agent fields -->
+    <record id="view_partner_form_inherit_estate" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.estate</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='function']" position="after">
+                <field name="is_agent"/>
+                <field name="agent_since" invisible="is_agent == False"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- 2. Extend Property Form to add total_area, best_price, and offer decorations -->
+    <record id="view_estate_property_form_inherit" model="ir.ui.view">
+        <field name="name">estate.property.form.inherit</field>
+        <field name="model">estate.property</field>
+        <field name="inherit_id" ref="estate.view_estate_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='description']" position="inside">
+                <group>
+                    <field name="total_area" readonly="True"/>
+                    <field name="best_price" readonly="True"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='offer_ids']/list" position="attributes">
+                <attribute name="decoration-success">status == 'accepted'</attribute>
+                <attribute name="decoration-danger">status == 'refused'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

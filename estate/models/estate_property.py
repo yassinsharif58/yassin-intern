@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
+
 
 class EstateProperty(models.Model):
     _name = "estate.property"
@@ -24,6 +26,15 @@ class EstateProperty(models.Model):
         ('west', 'West'),
     ])
 
+    # State field for Task 07
+    state = fields.Selection([
+        ('new', 'New'),
+        ('offer_received', 'Offer Received'),
+        ('offer_accepted', 'Offer Accepted'),
+        ('sold', 'Sold'),
+        ('cancelled', 'Cancelled'),
+    ], required=True, copy=False, default='new', string='Status')
+
     offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers')
     property_type_id = fields.Many2one('estate.property.type', string="Property Type")
     buyer_id = fields.Many2one('res.partner', string="Buyer", copy=False)
@@ -42,3 +53,34 @@ class EstateProperty(models.Model):
     def _compute_best_price(self):
         for prop in self:
             prop.best_price = max(prop.offer_ids.mapped('price')) if prop.offer_ids else 0.0
+
+    @api.onchange('garden')
+    def _onchange_garden(self):
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = 'north'
+        else:
+            self.garden_area = 0
+            self.garden_orientation = False
+
+    @api.constrains('expected_price', 'selling_price')
+    def _check_prices(self):
+        for prop in self:
+            if prop.expected_price <= 0:
+                raise ValidationError("The expected price must be strictly greater than 0.")
+            if prop.selling_price < 0:
+                raise ValidationError("The selling price cannot be negative.")
+
+    def action_sold(self):
+        for prop in self:
+            if prop.state == 'cancelled':
+                raise UserError("A cancelled property cannot be set as sold.")
+            prop.state = 'sold'
+        return True
+
+    def action_cancel(self):
+        for prop in self:
+            if prop.state == 'sold':
+                raise UserError("A sold property cannot be cancelled.")
+            prop.state = 'cancelled'
+        return True

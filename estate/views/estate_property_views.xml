@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- 1. List View -->
-    <record id="estate_property_view_list" model="ir.ui.view">
-    <field name="name" eval="'estate.property.list'"/>
-        <field name="model" eval="'estate.property'"/>
-    <field name="arch" type="xml">
-            <list string="Properties">
-                <field name="name"/>
-                <field name="property_type_id"/>
-                <field name="postcode"/>
-                <field name="bedrooms"/>
-                <field name="living_area"/>
-                <field name="expected_price"/>
-                <field name="selling_price"/>
-                <field name="date_availability"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- 2. Form View -->
     <record id="view_estate_property_form" model="ir.ui.view">
     <field name="name">estate.property.form</field>
     <field name="model">estate.property</field>
     <field name="arch" type="xml">
         <form string="Property">
+            <header>
+    <button name="action_sold" type="object" string="Sold" invisible="state in ('sold', 'cancelled')" class="oe_highlight"/>
+    <button name="action_cancel" type="object" string="Cancel" invisible="state in ('sold', 'cancelled')"/>
+    <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
+</header>
             <sheet>
                 <group>
                     <group>
@@ -42,7 +28,7 @@
                     </group>
                 </group>
                 <notebook>
-                    <page string="Description">
+                    <page string="Description" name="description">
                         <group>
                             <field name="description"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -58,46 +44,18 @@
                             <field name="buyer_id"/>
                             <field name="best_price" readonly="1"/>
                         </group>
-                        <field name="offer_ids">
-                            <list editable="bottom">
-                                <field name="price"/>
-                                <field name="partner_id"/>
-                                <field name="status"/>
-                            </list>
-                        </field>
+                       <field name="offer_ids">
+    <list editable="bottom">
+        <field name="price"/>
+        <field name="partner_id"/>
+        <field name="status"/>
+    </list>
+</field>
                     </page>
                 </notebook>
             </sheet>
         </form>
     </field>
 </record>
-
-    <!-- 3. Search View -->
-    <record id="estate_property_view_search" model="ir.ui.view">
-        <field name="name">estate.property.search</field>
-        <field name="model">estate.property</field>
-        <field name="arch" type="xml">
-            <search string="Properties">
-                <field name="name"/>
-                <field name="property_type_id"/>
-                <field name="postcode"/>
-                <field name="expected_price"/>
-                <field name="bedrooms"/>
-                <field name="living_area"/>
-                <field name="facades"/>
-            </search>
-        </field>
-    </record>
-
-    <!-- 4. The Action -->
-    <record id="estate_property_action" model="ir.actions.act_window">
-        <field name="name">Properties</field>
-        <field name="res_model">estate.property</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <!-- 5. The Menus -->
     <menuitem id="estate_menu_root" name="Real Estate"/>
-    <menuitem id="estate_menu_first_level" name="Advertisements" parent="estate_menu_root"/>
-    <menuitem id="estate_menu_action" name="Properties" parent="estate_menu_first_level" action="estate_property_action"/>
 </odoo>
